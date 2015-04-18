@@ -2,8 +2,11 @@ require 'rspec'
 require './lib/taxonomies'
 
 RSpec.describe "Parsing XML" do
-  let(:taxonomy_xml) { File.read('../resources/taxonomy.xml') }
-  let(:taxonomies) { Taxonomies.parse(taxonomy_xml) }
+  let(:taxonomies) do
+    File.open('../resources/taxonomy.xml','r') do |file|
+      Taxonomies.parse(file)
+    end
+  end
   it do
     expect(taxonomies.taxonomies.count).to eq(1)
   end
