@@ -1,10 +1,10 @@
 class Hash
-  # TODO: if a value exists at an update point, collate with new value
   def update_in(keys,value)
-    target = keys.pop
-    keys.reduce(self) do |acc,key|
+    last = keys.pop
+    trgt = keys.reduce(self) do |acc,key|
       acc[key] ||= {}
-    end[target] = value
+    end
+    trgt[last] = value.respond_to?(:call) ? value.call(trgt[last]) : value
     self
   end
 end

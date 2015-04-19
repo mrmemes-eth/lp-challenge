@@ -44,4 +44,27 @@ RSpec.describe Hash, "#update_in" do
     end
   end
 
+  context "when provided a lambda" do
+    let(:h) { {:a => {:b => :c}} }
+
+    context "simple lambda" do
+      let(:str_proc) do
+        ->(current) { current.to_s }
+      end
+      specify do
+        expect(h.update_in([:a,:b],str_proc)).to eq({:a => {:b => "c"}})
+      end
+    end
+
+    context "collating lambda" do
+      let(:update_proc) do
+        ->(new,current) { current ? [new].unshift(current) : value }
+      end
+      let(:result) { {:a => {:b => [:c,:d]}} }
+      specify do
+        expect(h.update_in([:a,:b], update_proc.curry.call(:d))).to eq(result)
+      end
+    end
+  end
+  
 end
