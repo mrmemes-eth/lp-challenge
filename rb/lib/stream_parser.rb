@@ -3,10 +3,12 @@ require_relative 'hash_ext'
 
 class StreamParser < Ox::Sax
   attr_accessor :elements
+  attr_accessor :emitter
   attr_accessor :attributes
 
-  def initialize
+  def initialize(emitter)
     self.elements = []
+    self.emitter = emitter
     self.attributes = {}
   end
 
@@ -27,16 +29,17 @@ class StreamParser < Ox::Sax
   def end_element(name)
     guard(name) { elements.pop }
     if name == :destination
-      # TODO: when this element is :destination, emit a destination template
-
+      # when the :destination element is finished, call the emitter
+      emitter.call(attributes)
       # then clear attributes to prepare for next destination
-      attributes.clear
+      self.attributes = {}
     end
   end
 
   def value(value)
     guard(value) do
-      attributes.update_in(elements,value_str(value))
+      collate_proc = ->(current){ current ? Array(current).push(value_str(value)) : value }
+      attributes.update_in(elements, collate_proc)
     end
   end
   alias cdata value
