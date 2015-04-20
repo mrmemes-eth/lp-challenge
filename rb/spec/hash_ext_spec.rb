@@ -58,7 +58,7 @@ RSpec.describe Hash, "#update_in" do
 
     context "collating lambda" do
       let(:update_proc) do
-        ->(new,current) { current ? [new].unshift(current) : value }
+        ->(new,current) { current ? [new].unshift(current) : new }
       end
       let(:result) { {:a => {:b => [:c,:d]}} }
       specify do

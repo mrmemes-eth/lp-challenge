@@ -27,8 +27,8 @@ class StreamParser < Ox::Sax
   end
 
   def end_element(name)
-    guard(name) { elements.pop }
     if name == :destination
+      guard(name) { elements.pop }
       # when the :destination element is finished, call the emitter
       emitter.call(attributes)
       # then clear attributes to prepare for next destination
@@ -38,8 +38,10 @@ class StreamParser < Ox::Sax
 
   def value(value)
     guard(value) do
-      collate_proc = ->(current){ current ? Array(current).push(value_str(value)) : value }
-      attributes.update_in(elements, collate_proc)
+      collate_proc = ->(new, current) do
+        current ? Array(current).push(new) : new
+      end
+      attributes.update_in(elements, collate_proc.curry.call(value_str(value)))
     end
   end
   alias cdata value
