@@ -1,0 +1,19 @@
+#! /usr/bin/env ruby
+
+require 'optparse'
+
+banner = "Usage: #{File.basename(__FILE__)} <taxonomy-xml-file> <destinations-xml-file> [-o output-directory-path]"
+options = {}
+OptionParser.new do |opts|
+  opts.banner = banner
+  opts.on("-o", "Output directory path. Defaults to ./build") do |v|
+    options[:output_dir] = o
+  end
+end.parse!
+
+taxonomies, destinations = ARGV
+
+unless taxonomies && destinations
+  puts banner
+  puts "\n  Please supply both the taxonomies and destinations xml file paths"
+end
