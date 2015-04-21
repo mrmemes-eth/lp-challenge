@@ -17,3 +17,9 @@ unless taxonomies && destinations
   puts banner
   puts "\n  Please supply both the taxonomies and destinations xml file paths"
 end
+
+start_time = Time.now
+# emit templates here
+elapsed_time = Time.now - start_time
+
+puts "Finished processing in: #{elapsed_time}"
