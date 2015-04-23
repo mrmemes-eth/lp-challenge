@@ -24,7 +24,7 @@ unless taxonomies && destinations
 end
 
 start_time = Time.now
-emitter = Emitter.new(options[:output_dir] || './build')
+emitter = Emitter.new(options[:output_dir] || './build', taxonomies)
 File.open(destinations) do |dest|
   Ox.sax_parse(StreamParser.new(emitter), dest)
 end

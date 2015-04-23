@@ -8,10 +8,10 @@ class Emitter
   attr_accessor :build_dir
   attr_accessor :taxonomy
 
-  def initialize(build_dir)
+  def initialize(build_dir, taxonomy_file_path)
     self.template = Erubis::Eruby.new(File.read('template/destination.html.erb'))
     self.build_dir = build_dir
-    self.taxonomy = Taxonomy.new('../resources/taxonomy.xml')
+    self.taxonomy = Taxonomy.new(taxonomy_file_path)
     prepare_build_dir
   end
 
