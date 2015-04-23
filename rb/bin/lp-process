@@ -11,7 +11,7 @@ OptionParser.new do |opts|
   opts.on("-o", "--output-dir", "Specify the output directory. Defaults to ./build. Does not prompt for overwrite.") do |opt|
     options[:output_dir] = opt
   end
-  opts.on("--porcelain", "A machine-readable output format (currently only emits elapsed run-time)") do |opt|
+  opts.on("--porcelain", "A machine-readable output format (currently only emits elapsed run-time, in ms)") do |opt|
     options[:porcelain] = opt
   end
 end.parse!
@@ -40,6 +40,12 @@ rescue SchemaValidationError
     lp-process <taxonomy-file.xml> <destinations-file.xml>
   MSG
 end
+
 elapsed_time = Time.now - start_time
 
-puts "Finished processing in: #{elapsed_time}"
+unless options[:porcelain]
+  puts "Finished processing in: #{elapsed_time} seconds"
+else
+  puts "#{elapsed_time * 1e3}"
+end
+
