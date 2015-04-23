@@ -1,15 +1,26 @@
-require 'sax-machine'
-require 'location'
+require 'libxml'
+require_relative './location'
 
 class Taxonomy
-  include SAXMachine
-  element :taxonomy_name, :as => :name
-  elements :node, :as => :locations, class: Location
+  attr_accessor :xml_file
 
-  def retrieve(location_name)
-    locations.map do |location|
-      location.retrieve(location_name)
-    end.first
+  def initialize(file)
+    self.xml_file = LibXML::XML::Parser.file(file)
   end
-end
 
+  def document
+    @document ||= xml_file.parse
+  end
+
+  def find(location)
+    Location.new(find_location_node(location))
+  end
+
+  private
+
+  def find_location_node(location)
+    # we *should* only find one...
+    document.find("//node[node_name[text()='#{location}']]").first
+  end
+
+end

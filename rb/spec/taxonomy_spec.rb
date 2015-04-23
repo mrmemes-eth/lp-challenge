@@ -1,13 +1,17 @@
-require 'spec_helper'
-require_relative '../lib/taxonomy.rb'
+require 'rspec'
+require_relative '../lib/taxonomy'
+require_relative '../lib/location'
 
 RSpec.describe Taxonomy do
-  describe "#retrieve" do
-    let(:sudan) { Location.new(name: "Sudan") }
-    let(:africa) { Location.new(name: "Africa", locations: [sudan]) }
-    let(:world) { Taxonomy.new(name: "World", locations: [africa]) }
-    it "returns a child location" do
-      expect(world.retrieve("Sudan")).to eq(sudan)
+  let(:tax) do
+    Taxonomy.new('../resources/taxonomy.xml')
+  end
+
+  describe '#find' do
+    specify do
+      expect(tax.find('Africa')).to be_kind_of(Location)
     end
   end
+
 end
+
