@@ -4,7 +4,23 @@ require_relative '../lib/destination'
 
 RSpec.describe Destination do
   let(:tax) { Taxonomy.new('../resources/taxonomy.xml') }
-  let(:dest) { Destination.new(tax,"Cape Town") }
+  let(:attrs) do
+    { title: 'Cape Town',
+      introductory: { introduction: { overview: 'Cape Town Overview' } } }
+  end
+  let(:dest) { Destination.new(tax,attrs) }
+
+  describe "#name" do
+    specify{ expect(dest.name).to eq("Cape Town") }
+  end
+
+  describe "#overview" do
+    specify{ expect(dest.overview).to eq('Cape Town Overview') }
+    context "when there is no overview" do
+      let(:dest) { Destination.new(tax,{title: 'Carp Towne'}) }
+      specify{ expect(dest.overview).to be(nil) }
+    end
+  end
 
   describe "#file_name" do
     specify{ expect(dest.file_name).to eq("cape_town.html") }
@@ -21,4 +37,5 @@ RSpec.describe Destination do
     end
     specify{ expect(dest.sub_regions.map(&:name)).to eq(["Table Mountain National Park"]) }
   end
+
 end

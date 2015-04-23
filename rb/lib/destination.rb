@@ -1,12 +1,20 @@
+require_relative './hash_ext'
 require_relative './taxonomy'
 
 class Destination
   attr_accessor :taxonomy
-  attr_accessor :name
 
-  def initialize(taxonomy, name)
+  def initialize(taxonomy, attrs)
     self.taxonomy = taxonomy
-    self.name = name
+    @attributes = attrs
+  end
+
+  def name
+    @attributes[:title]
+  end
+
+  def overview
+    @attributes.get_in(:introductory, :introduction, :overview)
   end
 
   def file_name
@@ -14,12 +22,29 @@ class Destination
   end
 
   def super_region
-    self.class::new(taxonomy, taxonomy.find(name).ancestor)
+    self.class::new(taxonomy, title: taxonomy.find(name).ancestor)
   end
 
   def sub_regions
     taxonomy.find(name).children.map do |child|
-      self.class::new(taxonomy, child)
+      self.class::new(taxonomy, title: child)
+    end
+  end
+
+  def attributes
+    { region: name,
+      super_region: {
+        name: super_region.name,
+        file: super_region.file_name },
+      sub_regions: sub_region_attributes,
+      description: overview }
+  end
+
+  private
+
+  def sub_region_attributes
+    sub_regions.map do |region|
+      { name: region.name, file: region.file_name }
     end
   end
 

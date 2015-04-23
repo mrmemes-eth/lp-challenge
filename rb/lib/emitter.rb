@@ -16,25 +16,13 @@ class Emitter
   end
 
   def call(attrs)
-    dest = Destination.new(taxonomy,attrs[:destination][:title])
-    desc = attrs[:destination][:introductory][:introduction][:overview]
-    File.open(File.join(build_dir, dest.file_name), 'w+') do |f|
-      f.write(template.result(template_attrs(dest,desc)))
+    destination = Destination.new(taxonomy,attrs[:destination])
+    File.open(File.join(build_dir, destination.file_name), 'w+') do |f|
+      f.write(template.result(destination.attributes))
     end
   end
 
   private
-
-  def template_attrs(dest, description)
-    { region: dest.name,
-      super_region: {
-        name: dest.super_region.name,
-        file: dest.super_region.file_name },
-      sub_regions: dest.sub_regions.map do |region|
-        { name: region.name, file: region.file_name }
-      end,
-      description: description }
-  end
 
   def prepare_build_dir
     FileUtils.rm_rf(self.build_dir)
