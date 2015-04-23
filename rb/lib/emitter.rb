@@ -30,6 +30,9 @@ class Emitter
       super_region: {
         name: dest.super_region.name,
         file: dest.super_region.file_name },
+      sub_regions: dest.sub_regions.map do |region|
+        { name: region.name, file: region.file_name }
+      end,
       description: description }
   end
 

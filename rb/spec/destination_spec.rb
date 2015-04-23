@@ -14,4 +14,11 @@ RSpec.describe Destination do
     specify{ expect(dest.super_region).to be_kind_of(Destination) }
     specify{ expect(dest.super_region.name).to eq("South Africa") }
   end
+
+  describe "#sub_regions" do
+    specify do
+      expect(dest.sub_regions.all?{|r| r.kind_of?(Destination) }).to be(true)
+    end
+    specify{ expect(dest.sub_regions.map(&:name)).to eq(["Table Mountain National Park"]) }
+  end
 end

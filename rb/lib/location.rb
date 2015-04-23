@@ -12,4 +12,8 @@ class Location
       nil
     end
   end
+
+  def children
+    node.find('node/node_name').map(&:content)
+  end
 end

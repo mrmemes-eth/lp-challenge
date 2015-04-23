@@ -17,4 +17,10 @@ class Destination
     self.class::new(taxonomy, taxonomy.find(name).ancestor)
   end
 
+  def sub_regions
+    taxonomy.find(name).children.map do |child|
+      self.class::new(taxonomy, child)
+    end
+  end
+
 end

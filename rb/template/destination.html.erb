@@ -19,9 +19,20 @@
             <h3>Navigation</h3>
             <div class="content">
               <div class="inner">
-                <ul>
-                  <li><a href="<%= super_region[:file] %>"><%= super_region[:name] %></a></li>
-                </ul>
+                <%- unless super_region[:name].nil? %>
+                  <h4>Parent Region</h4>
+                  <ul>
+                    <li><a href="<%= super_region[:file] %>"><%= super_region[:name] %></a></li>
+                  </ul>
+                <%- end %>
+                <%- if sub_regions.any? %>
+                  <h4>Sub Regions</h4>
+                  <ul>
+                    <%- sub_regions.each do |sub_region| %>
+                      <li><a href="<%= sub_region[:file] %>"><%= sub_region[:name] %></a></li>
+                    <%- end %>
+                  </ul>
+                <%- end %>
               </div>
             </div>
           </div>

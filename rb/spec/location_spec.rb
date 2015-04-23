@@ -17,4 +17,12 @@ RSpec.describe Location do
     end
   end
 
+  describe '#children' do
+    let(:result) do
+       ["Cape Town", "Free State", "Gauteng", "KwaZulu-Natal",
+        "Mpumalanga", "The Drakensberg", "The Garden Route"]
+    end
+    specify { expect(south_africa.children).to eq(result) }
+  end
+
 end
