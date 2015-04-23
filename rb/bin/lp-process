@@ -1,6 +1,8 @@
 #! /usr/bin/env ruby
 
 require 'optparse'
+require './lib/emitter'
+require './lib/stream_parser'
 
 banner = "Usage: #{File.basename(__FILE__)} <taxonomy-xml-file> <destinations-xml-file> [-o output-directory-path]"
 options = {}
@@ -22,7 +24,10 @@ unless taxonomies && destinations
 end
 
 start_time = Time.now
-# emit templates here
+emitter = Emitter.new(options[:output_dir] || './build')
+File.open(destinations) do |dest|
+  Ox.sax_parse(StreamParser.new(emitter), dest)
+end
 elapsed_time = Time.now - start_time
 
 puts "Finished processing in: #{elapsed_time}"

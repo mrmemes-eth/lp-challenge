@@ -3,13 +3,13 @@ require_relative 'hash_ext'
 
 class StreamParser < Ox::Sax
   attr_accessor :elements
-  attr_accessor :emitter
   attr_accessor :attributes
+  attr_accessor :emitter
 
   def initialize(emitter)
     self.elements = []
-    self.emitter = emitter
     self.attributes = {}
+    self.emitter = emitter
   end
 
   def current_element
@@ -17,18 +17,18 @@ class StreamParser < Ox::Sax
   end
 
   def start_element(name)
-    guard(name) { elements << name }
+    guard(name) { elements.push(name) }
   end
 
   def attr_value(name, value)
     guard(name) do
-      attributes.update_in(elements.push(name),value_str(value))
+      attributes.update_in(Array[*elements,name],value_str(value))
     end
   end
 
   def end_element(name)
+    guard(name) { elements.pop }
     if name == :destination
-      guard(name) { elements.pop }
       # when the :destination element is finished, call the emitter
       emitter.call(attributes)
       # then clear attributes to prepare for next destination
@@ -52,10 +52,8 @@ class StreamParser < Ox::Sax
     v.respond_to?(:as_s) ? v.as_s : v
   end
 
-  def guard(element, &block)
-    if elements.include?(:destination) || element == :destination
-      block.call
-    end
+  def guard(element)
+    yield if(elements.include?(:destination) || element == :destination)
   end
 
 end
