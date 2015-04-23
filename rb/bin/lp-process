@@ -24,9 +24,21 @@ unless taxonomies && destinations
 end
 
 start_time = Time.now
-emitter = Emitter.new(options[:output_dir] || './build', taxonomies)
-File.open(destinations) do |dest|
-  Ox.sax_parse(StreamParser.new(emitter), dest)
+begin
+  emitter = Emitter.new(options[:output_dir] || './build', taxonomies)
+  unless File.foreach(destinations).take(2).grep(/destinations/).any?
+    raise SchemaValidationError
+  end
+  File.open(destinations) do |dest|
+    Ox.sax_parse(StreamParser.new(emitter), dest)
+  end
+rescue SchemaValidationError
+  puts <<-MSG
+  Schema Validation Failed. Please ensure input files are in the correct order.
+
+  Usage:
+    lp-process <taxonomy-file.xml> <destinations-file.xml>
+  MSG
 end
 elapsed_time = Time.now - start_time
 

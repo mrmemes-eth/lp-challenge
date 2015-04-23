@@ -1,4 +1,5 @@
 require 'libxml'
+require_relative './schema_validation_error'
 require_relative './location'
 
 class Taxonomy
@@ -9,7 +10,9 @@ class Taxonomy
   end
 
   def document
-    @document ||= xml_file.parse
+    @document ||= xml_file.parse.tap do |doc|
+      raise SchemaValidationError unless doc.root.name == "taxonomies"
+    end
   end
 
   def find(location)
