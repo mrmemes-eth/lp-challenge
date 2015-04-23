@@ -1,15 +1,12 @@
 require 'erubis'
 require 'fileutils'
 require_relative './taxonomy'
+require_relative './destination'
 
 class Emitter
   attr_accessor :template
   attr_accessor :build_dir
   attr_accessor :taxonomy
-
-  def self.file_name(region)
-    "#{region.downcase.gsub(/\W/,'_')}.html" if region
-  end
 
   def initialize(build_dir)
     self.template = Erubis::Eruby.new(File.read('template/destination.html.erb'))
@@ -19,28 +16,21 @@ class Emitter
   end
 
   def call(attrs)
-    File.open(File.join(build_dir, title_file_name(attrs)), 'w+') do |f|
-      f.write(template.result(template_attrs(attrs)))
+    dest = Destination.new(taxonomy,attrs[:destination][:title])
+    desc = attrs[:destination][:introductory][:introduction][:overview]
+    File.open(File.join(build_dir, dest.file_name), 'w+') do |f|
+      f.write(template.result(template_attrs(dest,desc)))
     end
   end
 
   private
 
-  def template_attrs(attrs)
-    super_region = taxonomy.find(title(attrs)).ancestor
-    { region: title(attrs),
+  def template_attrs(dest, description)
+    { region: dest.name,
       super_region: {
-        name: super_region,
-        file: self.class::file_name(super_region) },
-      description: attrs[:destination][:introductory][:introduction][:overview] }
-  end
-
-  def title(attrs)
-    attrs[:destination][:title]
-  end
-
-  def title_file_name(attrs)
-    self.class::file_name(title(attrs))
+        name: dest.super_region.name,
+        file: dest.super_region.file_name },
+      description: description }
   end
 
   def prepare_build_dir
