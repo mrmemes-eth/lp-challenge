@@ -1,5 +1,6 @@
 class Hash
-  def update_in(keys,value)
+  def update_in(path,value)
+    keys = path.dup
     last = keys.pop
     trgt = keys.reduce(self) do |acc,key|
       acc[key] ||= {}
