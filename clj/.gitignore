@@ -9,4 +9,4 @@ pom.xml.asc
 *.class
 /.lein-*
 /.nrepl-port
-.hg/
+*.sw?
