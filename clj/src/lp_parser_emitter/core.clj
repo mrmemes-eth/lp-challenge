@@ -1,6 +1,7 @@
 (ns lp-parser-emitter.core
   (:gen-class)
-  (:require [clojure.tools.cli :as cli]))
+  (:require [clojure.tools.cli :as cli]
+            [clj-time.core :as time]))
 
 (def cli-options
   [["-o"
@@ -23,7 +24,10 @@
   "primary executable interface"
   [& args]
   (let [{:keys [options arguments summary]} (cli/parse-opts args cli-options)
-        [taxonomy-xml destinations-xml] arguments]
+        [taxonomy-xml destinations-xml] arguments
+        start-time (time/now)]
     (cond
      (:help options) (exit 0 (usage summary))
-     (not= (count arguments) 2) (exit 1 (usage summary)))))
+     (not= (count arguments) 2) (exit 1 (usage summary)))
+    (let [elapsed-millis (time/in-millis (time/interval start-time (time/now)))]
+      (println "Finished processing in:" (/ elapsed-millis 1E3) "seconds."))))
