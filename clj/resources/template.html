@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Lonely Planet</title>
+    <link href="all.css" media="screen" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <div id="logo"></div>
+        <h1>Lonely Planet: {{region}}</h1>
+      </div>
+
+      <div id="wrapper">
+        <div id="sidebar">
+          <div class="block">
+            <h3>Navigation</h3>
+            <div class="content">
+              <div class="inner">
+                {% if super_region.name %}
+                  <h4>Parent Region</h4>
+                  <ul>
+                    <li><a href="{{super_region.file}}">{{super_region.title}}</a></li>
+                  </ul>
+                {% end %}
+                {% if any sub_regions %}
+                  <h4>Sub Regions</h4>
+                  <ul>
+                    {% for sub_region in sub_regions %}
+                    <li><a href="{{sub_region.file}}">{{sub_region.name}}</a></li>
+                    {% end %}
+                  </ul>
+                {% end %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="main">
+          <div class="block">
+            <div class="secondary-navigation">
+              <ul>
+                <li class="first"><a href="#">{{region}}</a></li>
+              </ul>
+              <div class="clear"></div>
+            </div>
+            <div class="content">
+              <div class="inner">
+                <p>{{description}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
