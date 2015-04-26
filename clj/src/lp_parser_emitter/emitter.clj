@@ -1,7 +1,8 @@
 (ns lp-parser-emitter.emitter
   (:gen-class)
   (require [lp-parser-emitter.destinations :as dest]
-           [clojure.java.io :as io]))
+           [clojure.java.io :as io]
+           [selmer.parser :as selmer]))
 
 (defn- prepare-build-dir
   "Ensures the build directory is present and removes any files currently in it."
@@ -20,8 +21,10 @@
    HTML file for each destination."
   [destinations output-directory]
   (prepare-build-dir output-directory)
-  (let [template (io/resource "template.html")]
+  (let [template (slurp (io/resource "template.html"))]
     (doseq [destination destinations]
       (let [filename (dest/filename destination)
+            attributes {:region (dest/title destination)
+                        :description (dest/overview destination)}
             file (io/file output-directory filename)]
-        (spit file (slurp template))))))
+        (spit file (selmer/render template attributes))))))

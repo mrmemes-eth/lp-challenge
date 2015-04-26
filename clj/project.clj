@@ -7,7 +7,8 @@
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/data.zip "0.1.1"]
                  [org.clojure/tools.cli "0.3.1"]
-                 [clj-time "0.9.0"]]
+                 [clj-time "0.9.0"]
+                 [selmer "0.8.2"]]
   :plugins [[lein-bin "0.3.5"]]
   :bin {:name "lp-process"
         :bin-path "bin"}
