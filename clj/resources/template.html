@@ -24,15 +24,15 @@
                   <ul>
                     <li><a href="{{super_region.file}}">{{super_region.title}}</a></li>
                   </ul>
-                {% end %}
+                {% endif %}
                 {% if any sub_regions %}
                   <h4>Sub Regions</h4>
                   <ul>
                     {% for sub_region in sub_regions %}
                     <li><a href="{{sub_region.file}}">{{sub_region.name}}</a></li>
-                    {% end %}
+                    {% endfor %}
                   </ul>
-                {% end %}
+                {% endif %}
               </div>
             </div>
           </div>
