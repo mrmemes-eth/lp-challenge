@@ -27,3 +27,15 @@
   (let [dest-xml (x/lazy "../resources/destinations.xml")]
     (is (re-matches #"^\sGood-looking, fun-loving, sporty and sociable.*"
                     (d/overview (d/find-destination dest-xml "Cape Town"))))))
+
+(deftest attributes-test
+  (let [dest-xml (x/lazy "test/fixtures/cape_town.xml")
+        cape-town (d/find-destination dest-xml "Cape Town")
+        tax-xml (slurp "../resources/taxonomy.xml")]
+    (is (= {:region "Cape Town"
+            :description " EXAMPLE OVERVIEW "
+            :super_region {:name "South Africa"
+                           :file "south_africa.html"}
+            :sub_regions [{:name "Table Mountain National Park"
+                           :file "table_mountain_national_park.html"}]}
+           (d/attributes tax-xml cape-town)))))

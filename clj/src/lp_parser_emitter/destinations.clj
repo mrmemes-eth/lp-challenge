@@ -1,6 +1,7 @@
 (ns lp-parser-emitter.destinations
   (:gen-class)
   (:require [lp-parser-emitter.xml :as xml]
+            [lp-parser-emitter.taxonomies :as tax]
             [clojure.data.zip.xml :as zip-xml]
             [clojure.string :as string]))
 
@@ -31,12 +32,30 @@
                   :overview
                   zip-xml/text))
 
-(defn filename
-  "Given a destination node, return it's title."
-  [dest-node]
-  (-> dest-node
-      title
+(defn- node-name->filename
+  "Given a Title Case Name returns a file_name.html"
+  [node-name]
+  (-> node-name
       string/lower-case
       (string/replace #"\W" "_")
       (str ".html")))
+
+(defn filename
+  "Given a destination node, return it's title."
+  [dest-node]
+  (-> dest-node title node-name->filename))
+
+(defn attributes
+  "Given a destination node, return attributes for template rendering."
+  [taxonomies-xml dest-node]
+  (let [region (title dest-node)
+        tax-node (tax/find-node taxonomies-xml region)
+        parent-name (tax/node-name (tax/parent tax-node))
+        children-names (map tax/node-name (tax/children tax-node))]
+    {:region region
+     :description (overview dest-node)
+     :super_region {:name parent-name
+                    :file (node-name->filename parent-name)}
+     :sub_regions (map #(hash-map :name % :file (node-name->filename %))
+                       children-names)}))
 
