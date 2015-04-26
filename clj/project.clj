@@ -8,6 +8,7 @@
                  [org.clojure/data.zip "0.1.1"]
                  [org.clojure/tools.cli "0.3.1"]
                  [clj-time "0.9.0"]
+                 [com.github.kyleburton/clj-xpath "1.4.4"]
                  [selmer "0.8.2"]]
   :plugins [[lein-bin "0.3.5"]]
   :bin {:name "lp-process"
