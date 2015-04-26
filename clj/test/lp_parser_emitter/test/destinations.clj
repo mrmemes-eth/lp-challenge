@@ -22,3 +22,8 @@
   (let [dest-xml (x/lazy "../resources/destinations.xml")]
     (is (= "cape_town.html"
            (d/filename (d/find-destination dest-xml "Cape Town"))))))
+
+(deftest overview-test
+  (let [dest-xml (x/lazy "../resources/destinations.xml")]
+    (is (re-matches #"^\sGood-looking, fun-loving, sporty and sociable.*"
+                    (d/overview (d/find-destination dest-xml "Cape Town"))))))

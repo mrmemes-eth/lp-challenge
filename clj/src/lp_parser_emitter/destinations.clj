@@ -22,6 +22,15 @@
   [dest-node]
   (zip-xml/attr dest-node :title))
 
+(defn overview
+  "Given a destination node, return it's overview"
+  [dest-node]
+  (zip-xml/xml1-> dest-node
+                  :introductory
+                  :introduction
+                  :overview
+                  zip-xml/text))
+
 (defn filename
   "Given a destination node, return it's title."
   [dest-node]
