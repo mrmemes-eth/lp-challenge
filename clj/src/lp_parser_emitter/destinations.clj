@@ -1,17 +1,8 @@
 (ns lp-parser-emitter.destinations
   (:gen-class)
-  (:require [clojure.data.xml :as xml]
-            [clojure.zip :as zip]
+  (:require [lp-parser-emitter.xml :as xml]
             [clojure.data.zip.xml :as zip-xml]
             [clojure.string :as string]))
-
-(defn lazy-xml
-  "Given a file path, yields a lazy seq of XML."
-  [file-path]
-  (-> file-path
-      (clojure.java.io/make-input-stream {})
-      xml/parse
-      zip/xml-zip))
 
 (defn destinations
   "Given a lazy seq of XML, lazily yield parsed destinations."
