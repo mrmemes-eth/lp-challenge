@@ -19,12 +19,11 @@
 (defn spit-html
   "takes a lazy-seq of destinations and a directory to build to and emits an
    HTML file for each destination."
-  [destinations output-directory]
+  [destinations taxonomies output-directory]
   (prepare-build-dir output-directory)
   (let [template (slurp (io/resource "template.html"))]
     (doseq [destination destinations]
       (let [filename (dest/filename destination)
-            attributes {:region (dest/title destination)
-                        :description (dest/overview destination)}
+            attributes (dest/attributes taxonomies destination)
             file (io/file output-directory filename)]
         (spit file (selmer/render template attributes))))))

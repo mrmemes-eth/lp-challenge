@@ -35,10 +35,12 @@
 (defn- node-name->filename
   "Given a Title Case Name returns a file_name.html"
   [node-name]
-  (-> node-name
-      string/lower-case
-      (string/replace #"\W" "_")
-      (str ".html")))
+  (if node-name
+    (-> node-name
+        string/lower-case
+        (string/replace #"\W" "_")
+        (str ".html"))
+    "#"))
 
 (defn filename
   "Given a destination node, return it's title."

@@ -13,7 +13,7 @@
 (defn node-name
   "Given a node, returns the value of it's child node_name."
   [node]
-  (xp/$x:text "./node_name" node))
+  (xp/$x:text? "./node_name" node))
 
 (defn parent
   "Given a node, return its parent node."

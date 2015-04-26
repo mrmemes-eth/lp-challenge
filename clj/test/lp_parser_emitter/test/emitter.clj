@@ -6,8 +6,9 @@
 
 (deftest spit-html-test
   (testing "emits the correct number of files"
-    (let [dest-nodes (d/destinations (xml/lazy "../resources/destinations.xml"))]
-      (e/spit-html dest-nodes "build"))
+    (let [dest-nodes (d/destinations (xml/lazy "../resources/destinations.xml"))
+          tax-xml (slurp "../resources/taxonomy.xml")]
+      (e/spit-html dest-nodes tax-xml "build"))
     ; there are 24 destinations and one CSS file
     (is (= 25
            (count (rest (file-seq (clojure.java.io/file "./build"))))))))

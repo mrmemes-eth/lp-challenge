@@ -1,7 +1,10 @@
 (ns lp-parser-emitter.core
   (:gen-class)
   (:require [clojure.tools.cli :as cli]
-            [clj-time.core :as time]))
+            [clj-time.core :as time]
+            [lp-parser-emitter.destinations :as dest]
+            [lp-parser-emitter.xml :as xml]
+            [lp-parser-emitter.emitter :as emit]))
 
 (def cli-options
   [["-o"
@@ -29,5 +32,9 @@
     (cond
      (:help options) (exit 0 (usage summary))
      (not= (count arguments) 2) (exit 1 (usage summary)))
-    (let [elapsed-millis (time/in-millis (time/interval start-time (time/now)))]
-      (println "Finished processing in:" (/ elapsed-millis 1E3) "seconds."))))
+    (let [dest-nodes (dest/destinations (xml/lazy destinations-xml))
+          tax-xml (slurp taxonomy-xml)]
+      (emit/spit-html dest-nodes tax-xml "build")
+      (println "Finished processing in:"
+               (/ (time/in-millis (time/interval start-time (time/now))) 1E3)
+               "seconds."))))
